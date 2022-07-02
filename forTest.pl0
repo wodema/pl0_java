@@ -1,0 +1,7 @@
+var a,b;
+begin
+    for a:=2 step 1 until 3 do
+        begin
+            b:=b+1;
+        end
+end.

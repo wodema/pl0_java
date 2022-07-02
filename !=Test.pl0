@@ -1,0 +1,12 @@
+var a;
+begin
+    a:=3;
+    if a>2 then
+        begin
+            a:=3;
+        end
+    else
+        begin
+            a:=4;
+        end
+end.

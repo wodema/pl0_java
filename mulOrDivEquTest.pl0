@@ -1,0 +1,6 @@
+var a;
+begin
+    a:=2;
+    a*=2;
+    a/=4;
+end.
