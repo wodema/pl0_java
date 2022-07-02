@@ -1,0 +1,20 @@
+var a,b,c;
+begin
+    a:=2;
+//    b:=1;
+/*
+test note
+*/
+c:=a+1;
+    if c!=3 then
+        begin
+            c:=3;
+        end
+    else
+        begin
+            for c:=a+1 step 1 until 5 do
+                begin
+                    b:=c+2;
+                end
+        end
+end.
