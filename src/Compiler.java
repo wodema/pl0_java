@@ -3,7 +3,7 @@ import java.io.*;
 public class Compiler {
 
     public static void main(String[] args) {
-        String filename = "LING.PL0";
+        String filename = "wordTest.pl0";
         try {
             BufferedReader fin = new BufferedReader(new FileReader(filename));
             LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(fin);
@@ -26,7 +26,7 @@ public class Compiler {
             System.out.printf("There are %d error(s) in PL/0 program.\n", Constant.err);
         } else {
             interpreter.interpret();
-            try (FileWriter fileWriter = new FileWriter(new File("hbin.txt"))) {
+            try (FileWriter fileWriter = new FileWriter("hbin.txt")) {
                 for (int i = 0; i < Constant.cx; i++) {
                     Instruction instruction = Constant.code[i];
                     fileWriter.write(instruction.toString() + "\n");

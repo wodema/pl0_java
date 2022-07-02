@@ -65,7 +65,7 @@ public class Constant {
             Arrays.asList(SymbolType.SYM_CONST, SymbolType.SYM_VAR, SymbolType.SYM_PROCEDURE, SymbolType.SYM_NULL)
     );
     public static SymSet statbegsys = new SymSet(
-            Arrays.asList(SymbolType.SYM_BEGIN, SymbolType.SYM_CALL, SymbolType.SYM_IF, SymbolType.SYM_WHILE, SymbolType.SYM_FOR, SymbolType.SYM_STEP, SymbolType.SYM_UNTIL, SymbolType.SYM_NULL)
+            Arrays.asList(SymbolType.SYM_BEGIN, SymbolType.SYM_CALL, SymbolType.SYM_IF, SymbolType.SYM_WHILE, SymbolType.SYM_NULL)
     );
     public static SymSet facbegsys = new SymSet(
             Arrays.asList(SymbolType.SYM_IDENTIFIER, SymbolType.SYM_NUMBER, SymbolType.SYM_LPAREN, SymbolType.SYM_NULL)

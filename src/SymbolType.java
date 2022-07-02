@@ -41,8 +41,8 @@ public enum SymbolType {
     SYM_AND("&"),
     SYM_OR("||"),
     SYM_NOTE("//"),
-    SYM_NOTE_LINE("/*"),
-    SYM_NOTE_LINE_END("*/");
+    SYM_NOTE_LINES("/*"),
+    SYM_NOTE_LINES_END("*/");
     private final String value;
 
     public String getValue() {

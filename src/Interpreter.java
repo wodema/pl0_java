@@ -30,29 +30,28 @@ public class Interpreter {
                     stack[++top] = i.address;
                     break;
                 case OPR:
-                    switch (i.address) // operator
-                    {
-                        case 0:
+                    switch (OprCode.values()[i.address]) {// operator
+                        case OPR_RET:
                             top = b - 1;
                             pc = stack[top + 3];
                             b = stack[top + 2];
                             break;
-                        case 1:
+                        case OPR_NEG:
                             stack[top] = -stack[top];
                             break;
-                        case 2:
+                        case OPR_ADD:
                             top--;
                             stack[top] += stack[top + 1];
                             break;
-                        case 3:
+                        case OPR_MIN:
                             top--;
                             stack[top] -= stack[top + 1];
                             break;
-                        case 4:
+                        case OPR_MUL:
                             top--;
                             stack[top] *= stack[top + 1];
                             break;
-                        case 5:
+                        case OPR_DIV:
                             top--;
                             if (stack[top + 1] == 0) {
                                 Constant.errorLog.println("Runtime Error: Divided by zero.");
@@ -61,32 +60,32 @@ public class Interpreter {
                             }
                             stack[top] /= stack[top + 1];
                             break;
-                        case 6:
+                        case OPR_ODD:
                             stack[top] %= 2;
                             break;
-                        case 7:
+                        case OPR_EQU:
                             top--;
                             stack[top] = (stack[top] == stack[top + 1])? 1: 0;
                             break;
-                        case 8:
+                        case OPR_NEQ:
                             top--;
                             stack[top] = (stack[top] != stack[top + 1])? 1: 0;
                             break;
-                        case 9:
+                        case OPR_LES:
                             top--;
                             stack[top] = (stack[top] < stack[top + 1])? 1: 0;
                             break;
-                        case 10:
+                        case OPR_LEQ:
                             top--;
-                            stack[top] = (stack[top] >= stack[top + 1])? 1: 0;
+                            stack[top] = (stack[top] <= stack[top + 1])? 1: 0;
                             break;
-                        case 11:
+                        case OPR_GTR:
                             top--;
                             stack[top] = (stack[top] > stack[top + 1])? 1: 0;
                             break;
-                        case 12:
+                        case OPR_GEQ:
                             top--;
-                            stack[top] = (stack[top] <= stack[top + 1])? 1: 0;
+                            stack[top] = (stack[top] >= stack[top + 1])? 1: 0;
                             break;
                     } // switch
                     break;

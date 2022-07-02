@@ -30,8 +30,7 @@ public class Parser {
     public void test(SymSet s1, SymSet s2, int n) {
         SymSet s;
 
-        if (! s1.contains(Constant.symbol))
-        {
+        if (! s1.contains(Constant.symbol)) {
             Error.ErrorCause(n);
             s = new SymSet(s1);
             s.addAll(s2);
@@ -213,7 +212,7 @@ public class Parser {
 
     //////////////////////////////////////////////////////////////////////
     void statement(SymSet fsys) {
-        int i, cx1, cx2, cx3;
+        int i, cx1, cx2;
         SymSet set1, set;
 
         if (Constant.symbol == SymbolType.SYM_IDENTIFIER) { // variable assignment
@@ -237,7 +236,6 @@ public class Parser {
             } else {
                 Error.ErrorCause(13); // ':=' expected.
             }
-
             if (i != 0) {
                 gen(Mnemonic.STO, Constant.level - Constant.table[i].level, Constant.table[i].address);
             }
@@ -356,14 +354,14 @@ public class Parser {
                             lexicalAnalyzer.getSym();
                             gen(Mnemonic.LOD, Constant.level - Constant.table[i].level, Constant.table[i].address);
                             expression(set);
-                            gen(Mnemonic.OPR, 0, OprCode.OPR_GEQ.ordinal());
-                            cx3 = Constant.cx;
+                            gen(Mnemonic.OPR, 0, OprCode.OPR_LEQ.ordinal());
+                            cx1 = Constant.cx;
                             gen(Mnemonic.JPC, 0, 0);
                             if (Constant.symbol == SymbolType.SYM_DO) {
                                 lexicalAnalyzer.getSym();
                                 statement(fsys);
                                 gen(Mnemonic.JMP, 0, cx2); //跳回step
-                                Constant.code[cx3].address = Constant.cx;
+                                Constant.code[cx1].address = Constant.cx;
                             } else {
                                 Error.ErrorCause(27);
                             }
@@ -374,10 +372,10 @@ public class Parser {
                         Error.ErrorCause(27);
                     }
                 } else {
-                    Error.ErrorCause(27);
+                    Error.ErrorCause(13);
                 }
             } else {
-                Error.ErrorCause(27);
+                Error.ErrorCause(28);
             }
         }
         test(fsys, Constant.phi, 19);

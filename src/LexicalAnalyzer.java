@@ -52,8 +52,8 @@ public class LexicalAnalyzer {
         operator[17] = SymbolType.SYM_AND;
         operator[18] = SymbolType.SYM_OR;
         operator[19] = SymbolType.SYM_NOTE;
-        operator[20] = SymbolType.SYM_NOTE_LINE;
-        operator[21] = SymbolType.SYM_NOTE_LINE_END;
+        operator[20] = SymbolType.SYM_NOTE_LINES;
+        operator[21] = SymbolType.SYM_NOTE_LINES_END;
     }
 
     public void note() {
@@ -63,10 +63,13 @@ public class LexicalAnalyzer {
         getSym();
     }
 
-    public void noteLine() {
+    public void noteLines() {
         do {
-            getSym();
-        } while (Constant.symbol != SymbolType.SYM_NOTE_LINE_END);
+            do {
+                getCh();
+            } while (Constant.ch != '*');
+            matchNoteLineEnd();
+        } while (Constant.symbol != SymbolType.SYM_NOTE_LINES_END);
         getCh();
         getSym();
     }
@@ -98,30 +101,19 @@ public class LexicalAnalyzer {
         while(Character.isWhitespace(Constant.ch)) {
             getCh();
         }
-        if (Constant.symbol != SymbolType.SYM_NOTE_LINE) {
-            if (isAlpha(Constant.ch)) {
-                matchReservedWord();
-            } else if (isDigit(Constant.ch)) {
-                matchDigit();
-            } else {
-                matchOperator();
-            }
+        if (isAlpha(Constant.ch)) {
+            matchReservedWord();
+        } else if (isDigit(Constant.ch)) {
+            matchDigit();
         } else {
-            if (Constant.ch == '*') {
-                matchNoteLineEnd();
-            } else {
-                do {
-                    getCh();
-                } while (Constant.ch != '*');
-            }
+            matchOperatorOrOther();
         }
-
     }
 
     private void matchNoteLineEnd() {
         getCh();
         if (Constant.ch == '/') {
-            Constant.symbol = SymbolType.SYM_NOTE_LINE_END;
+            Constant.symbol = SymbolType.SYM_NOTE_LINES_END;
         }
     }
     private void matchReservedWord() {
@@ -147,6 +139,7 @@ public class LexicalAnalyzer {
         }
         if (find != Constant.MAX_RESERVED_WORD_LENGTH) {
             Constant.symbol = reservedWord[find];
+            System.out.println("识别到保留字：" + Constant.symbol.getValue());
         } else {
             Constant.symbol = SymbolType.SYM_IDENTIFIER;
         }
@@ -164,7 +157,7 @@ public class LexicalAnalyzer {
             Error.ErrorCause(25);
         }
     }
-    private void matchOperator() {
+    private void matchOperatorOrOther() {
         switch (Constant.ch) {
             case ':':
                 getCh();
@@ -172,7 +165,7 @@ public class LexicalAnalyzer {
                     Constant.symbol = SymbolType.SYM_BECOMES; // :=
                     getCh();
                 } else {
-                    Constant.symbol = SymbolType.SYM_NULL;       // illegal?
+                    matchIllegalChar();     // illegal?
                 }
                 break;
             case '<':
@@ -199,13 +192,14 @@ public class LexicalAnalyzer {
                     Constant.symbol = SymbolType.SYM_NEQ;
                     getCh();
                 } else {
-                    Constant.symbol = SymbolType.SYM_NULL;
+                    matchIllegalChar();
                 }
                 break;
             case '|':
                 getCh();
                 if (Constant.ch == '|') {
                     Constant.symbol = SymbolType.SYM_OR;
+                    System.out.println("识别到操作符：" + Constant.symbol.getValue());
                     getCh();
                 } else {
                     Constant.symbol = SymbolType.SYM_NULL;
@@ -215,9 +209,10 @@ public class LexicalAnalyzer {
                 getCh();
                 if (Constant.ch == '=') {
                     Constant.symbol = SymbolType.SYM_TIMES_EQU;
+                    System.out.println("识别到操作符：" + Constant.symbol.getValue());
                     getCh();
                 } else if (Constant.ch == '/') {
-                    Constant.symbol = SymbolType.SYM_NOTE_LINE_END;
+                    Constant.symbol = SymbolType.SYM_NOTE_LINES_END;
                     getCh();
                 } else {
                     Constant.symbol = SymbolType.SYM_TIMES;
@@ -227,13 +222,15 @@ public class LexicalAnalyzer {
                 getCh();
                 if (Constant.ch == '=') {
                     Constant.symbol = SymbolType.SYM_SLASH_EQU;
+                    System.out.println("识别到操作符：" + Constant.symbol.getValue());
                     getCh();
                 } else if (Constant.ch == '/') {
                     Constant.symbol = SymbolType.SYM_NOTE;
+                    System.out.println("识别到操作符：" + Constant.symbol.getValue());
                     note();
                 } else if (Constant.ch == '*') {
-                    Constant.symbol = SymbolType.SYM_NOTE_LINE;
-                    noteLine();
+                    Constant.symbol = SymbolType.SYM_NOTE_LINES;
+                    noteLines();
                 } else {
                     Constant.symbol = SymbolType.SYM_SLASH;
                 }
@@ -247,12 +244,12 @@ public class LexicalAnalyzer {
                 }
                 if (find != Constant.MAX_SYMBOL_LENGTH) {
                     Constant.symbol = operator[find];
+                    System.out.println("识别到操作符：" + Constant.symbol.getValue());
                     if (Constant.symbol != SymbolType.SYM_PERIOD) {
                         getCh();
                     }
                 } else {
-                    System.out.println("Fatal Error: Unknown character.");
-                    System.exit(1);
+                    matchIllegalChar();
                 }
 
         }
@@ -265,4 +262,10 @@ public class LexicalAnalyzer {
     private boolean isDigit(char ch) {
         return ch >= '0' && ch <= '9';
     }
+
+    private void matchIllegalChar() {
+        System.out.println("Fatal Error: Unknown character.");
+        System.exit(1);
+    }
+
 }
